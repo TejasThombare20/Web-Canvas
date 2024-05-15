@@ -4,6 +4,7 @@ import "./globals.css";
 import Provider from "@/components/Provider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import ModalProvider from "@/provider/modal-provider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,6 +32,7 @@ export default function RootLayout({
             <ModalProvider>
               {children}
               <Toaster />
+              <SonnerToaster />
             </ModalProvider>
           </ThemeProvider>
         </body>

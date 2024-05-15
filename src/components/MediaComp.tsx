@@ -1,24 +1,29 @@
+import React from "react";
 
-import React from 'react'
-
-
-import { FolderSearch } from 'lucide-react'
-import { getMediaFiles } from '@/lib/types'
-import MediaUploadButton from './Media-uploadButton'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command'
-import MediaCard from './Media-card'
+import { FolderSearch } from "lucide-react";
+import { getMediaFiles } from "@/lib/types";
+import MediaUploadButton from "./Media-uploadButton";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
+import MediaCard from "./Media-card";
 
 type Props = {
-  data: getMediaFiles
-  subaccountId: string
-}
+  data: getMediaFiles;
+  subaccountId: string;
+};
 
 const MediaComponent = ({ data, subaccountId }: Props) => {
   return (
     <div className="flex flex-col gap-4 h-full w-full">
       <div className="flex justify-between items-center">
         <h1 className="text-4xl">Media Bucket</h1>
-        <MediaUploadButton subacocoutId={subaccountId} />
+        <MediaUploadButton  subacocoutId={subaccountId} />
       </div>
       <Command className="bg-transparent">
         <CommandInput placeholder="Search for file name..." />
@@ -50,7 +55,7 @@ const MediaComponent = ({ data, subaccountId }: Props) => {
         </CommandList>
       </Command>
     </div>
-  )
-}
+  );
+};
 
-export default MediaComponent
+export default MediaComponent;

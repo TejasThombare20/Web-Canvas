@@ -1,6 +1,6 @@
 datasource db {
   provider     = "mysql"
-  url          = env("DATABASE_URL")
+  url          = env("PRODUCTION_DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -80,7 +80,7 @@ model Permissions {
 model Agency {
   id               String                @id @default(uuid())
   connectAccountId String?               @default("")
-  // customerId       String                @default("")
+  customerId       String                @default("")
   name             String
   agencyLogo       String                @db.Text
   companyEmail     String                @db.Text
@@ -396,8 +396,8 @@ model Notification {
 }
 
 enum Plan {
-  price_1OYxkqFj9oKEERu1NbKUxXxN
-  price_1OYxkqFj9oKEERu1KfJGWxgN
+  price_1PFidcRpGANjyp9sxl0lwuKF
+  price_1PFicuRpGANjyp9sxR9iEy7e
 }
 
 model Subscription {
@@ -430,4 +430,4 @@ model AddOns {
   Agency    Agency?  @relation(fields: [agencyId], references: [id])
 
   @@index([agencyId])
-}  
+}

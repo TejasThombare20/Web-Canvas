@@ -11,13 +11,16 @@ import {
 import {
   _getTicketsWithAllRelations,
   getAuthUserDetails,
+  getFunnels,
   getLaneswithTicketAndTags,
   getMedia,
   getPipelineDetails,
+  getTicketsWithTags,
   getUserPermissions,
 } from "./querires";
 import { db } from "./db";
 import { z } from "zod";
+import Stripe from "stripe";
 
 export type NotificationWithUser =
   | ({
@@ -92,7 +95,7 @@ export const LaneFormSchema = z.object({
 });
 
 export type TicketWithTags = Prisma.PromiseReturnType<
-  typeof getLaneswithTicketAndTags
+  typeof getTicketsWithTags
 >;
 
 export type TicketDetails = Prisma.PromiseReturnType<
@@ -107,4 +110,42 @@ export const TicketFormSchema = z.object({
   value: z.string().refine((value) => currencyNumberRegex.test(value), {
     message: "Value must be a valid price.",
   }),
+});
+
+export const ContactUserFormSchema = z.object({
+  name: z.string().min(1, "Required"),
+  email: z.string().email(),
+});
+
+export type Address = {
+  city: string;
+  country: string;
+  line1: string;
+  postal_code: string;
+  state: string;
+};
+
+export type ShippingInfo = {
+  address: Address;
+  name: string;
+};
+
+export type stripeCustomerType = {
+  email: string;
+  name: string;
+  shipping: ShippingInfo;
+  address: Address;
+};
+
+export type PriceList = Stripe.ApiList<Stripe.Price>;
+
+export type FunnelsForSubAccount = Prisma.PromiseReturnType<
+  typeof getFunnels
+>[0];
+
+export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput;
+
+export const FunnelPageSchema = z.object({
+  name: z.string().min(1),
+  pathName: z.string().optional(),
 });

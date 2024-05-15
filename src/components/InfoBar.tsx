@@ -16,6 +16,7 @@ import { Card } from "./ui/card";
 import { Switch } from "./ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { ModeToggle } from "./ToggleMode";
+import Link from "next/link";
 
 type Props = {
   notifications: NotificationWithUser | [];
@@ -51,6 +52,7 @@ const InfoBar = ({ notifications, className, subAccountId, role }: Props) => {
           className
         )}
       >
+        <Link href={"/"} className="text-3xl max-sm:mx-10 font-bold">WebCanvas.</Link>
         <div className="flex items-center gap-2 ml-auto">
           <Sheet>
             <SheetTrigger>
@@ -58,14 +60,14 @@ const InfoBar = ({ notifications, className, subAccountId, role }: Props) => {
                 <Bell size={17} />
               </div>
             </SheetTrigger>
-            <SheetContent className="mt-4 mr-4 pr-4 flex flex-col ">
+            <SheetContent className="mt-4 mr-4 pr-4 overflow-scroll">
               <SheetHeader>
                 Notifications
                 <SheetDescription>
                   {(role === "AGENCY_ADMIN" || role === "AGENCY_OWNER") && (
                     <Card className="flex items-center justify-between p-4 ">
                       Current Subaccount
-                      <Switch onChangeCapture={handleClick} />
+                      <Switch onCheckedChange={handleClick} />
                     </Card>
                   )}
                 </SheetDescription>

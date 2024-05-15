@@ -72,10 +72,7 @@ const layout = async ({ children, params }: Props) => {
           subAccountId={params.subaccountId as string}
           notifications={notifications}
         />
-        <div className="relative">
-         
-          {children}
-        </div>
+        <div className="relative">{children}</div>
       </div>
     </div>
   );

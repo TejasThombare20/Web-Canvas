@@ -1,5 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getLaneswithTicketAndTags, getPipelineDetails, updateLaneOrder, updateTicketsOrder } from "@/lib/querires";
+import {
+  getLaneswithTicketAndTags,
+  getPipelineDetails,
+  updateLaneOrder,
+  updateTicketsOrder,
+} from "@/lib/querires";
 import { LaneDetails } from "@/lib/types";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -29,13 +34,16 @@ const page = async ({ params }: Props) => {
   )) as LaneDetails[];
 
   return (
-    <Tabs defaultValue="view" className="w-full">
-      <TabsList className="bg-transparent border-b-2 h-16 w-full justify-between mb-4">
-        <PipelineInfobar
+    <>
+    <PipelineInfobar
           pipelineId={params.pipelineId}
           subAccountId={params.subaccountId}
           pipelines={pipelines}
         />
+
+    <Tabs defaultValue="view" className="w-full">
+      <TabsList className="bg-transparent border-b-2 h-16 w-full justify-between mb-4">
+        
         <div>
           <TabsTrigger value="view" className="!bg-transparent w-40 ">
             Pipeline view
@@ -45,12 +53,12 @@ const page = async ({ params }: Props) => {
       </TabsList>
       <TabsContent value="view">
         <PipelineView
-        lanes={lanes}
-        pipelineDetails={pipelineExists}
-        pipelineId={params.pipelineId}
-        subaccountId={params.subaccountId}
-        updateLanesOrder={updateLaneOrder}
-        updateTicketsOrder={updateTicketsOrder}
+          lanes={lanes}
+          pipelineDetails={pipelineExists}
+          pipelineId={params.pipelineId}
+          subaccountId={params.subaccountId}
+          updateLanesOrder={updateLaneOrder}
+          updateTicketsOrder={updateTicketsOrder}
         />
       </TabsContent>
       <TabsContent value="settings">
@@ -61,6 +69,7 @@ const page = async ({ params }: Props) => {
         />
       </TabsContent>
     </Tabs>
+    </>
   );
 };
 

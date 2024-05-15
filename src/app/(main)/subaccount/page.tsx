@@ -9,6 +9,8 @@ type Props = {
 const page = async ({ searchParams }: Props) => {
   const agencyId = await verifyAndAcceptInvitation();
 
+  // console.log("agencyId for verification", agencyId);
+
   if (!agencyId) {
     return <Unauthorized />;
   }
@@ -17,9 +19,13 @@ const page = async ({ searchParams }: Props) => {
 
   if (!user) return;
 
+  // console.log("user for per", user);
+
   const getFirstSubaccountwithAccess = user.Permissions.find(
     (permission) => permission.access === true
   );
+
+  // console.log("getFirstSubaccountwithAccess", getFirstSubaccountwithAccess);
 
   if (searchParams.state) {
     const statePath = searchParams.state.split("___")[0];
@@ -36,7 +42,7 @@ const page = async ({ searchParams }: Props) => {
     return redirect(`/subaccount/${getFirstSubaccountwithAccess.subAccountId}`);
   }
 
-  return <Unauthorized /> 
+  return <Unauthorized />;
 };
 
 export default page;

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,6 +18,7 @@ body {
 R (0)
 G (110)
 B (255 */
+
 
 @layer base {
   :root {
@@ -49,6 +51,7 @@ B (255 */
     --ring: 214.12 100% 50%;
 
     --radius: 0.5rem;
+    
   }
 
   .dark {
@@ -119,3 +122,4 @@ B (255 */
     transform: scale(1);
   }
 }
+

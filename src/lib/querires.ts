@@ -10,6 +10,7 @@ import {
   Prisma,
   Role,
   SubAccount,
+  Tag,
   Ticket,
   User,
 } from "@prisma/client";
@@ -17,8 +18,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { v4 } from "uuid";
 import SubAccountDetails from "@/components/SubAccount-deatils";
-import { CreateFunnelFormSchema, CreateMediaType } from "./types";
+import {
+  CreateFunnelFormSchema,
+  CreateMediaType,
+  UpsertFunnelPage,
+} from "./types";
 import { string, z } from "zod";
+import { revalidatePath } from "next/cache";
 
 export const getUserRole = async (email: string) => {
   const userData = await db.user.findUnique({
@@ -205,6 +211,8 @@ export const verifyAndAcceptInvitation = async () => {
     },
   });
 
+  // console.log("invitationExists", invitationExists);
+
   if (invitationExists) {
     const userDetails = await createTeamUser(invitationExists.agencyId, {
       email: invitationExists.email,
@@ -296,9 +304,8 @@ export const initUser = async (newUser: Partial<User>) => {
 };
 
 export const upsertAgency = async (agency: Agency, price?: Plan) => {
-  // console.log("agency", agency);
+  console.log("agency", agency);
   if (!agency.companyEmail) return null;
-
   try {
     const agencyDetails = await db.agency.upsert({
       where: {
@@ -307,9 +314,7 @@ export const upsertAgency = async (agency: Agency, price?: Plan) => {
       update: agency,
       create: {
         users: {
-          connect: {
-            email: agency.companyEmail,
-          },
+          connect: { email: agency.companyEmail },
         },
         ...agency,
         SidebarOption: {
@@ -350,7 +355,7 @@ export const upsertAgency = async (agency: Agency, price?: Plan) => {
     });
     return agencyDetails;
   } catch (error) {
-    console.log("error", error);
+    console.log(error);
   }
 };
 
@@ -791,6 +796,7 @@ export const _getTicketsWithAllRelations = async (laneId: string) => {
 };
 
 export const getSubAccountTeamMembers = async (subaccountId: string) => {
+  // console.log(subaccountId);
   const subaccountUsersWithAccess = await db.user.findMany({
     where: {
       Agency: {
@@ -801,14 +807,15 @@ export const getSubAccountTeamMembers = async (subaccountId: string) => {
         },
       },
       role: "SUBACCOUNT_USER",
-      Permissions: {
-        some: {
-          subAccountId: subaccountId,
-          access: true,
-        },
-      },
+      // Permissions: {
+      //   some: {
+      //     subAccountId: subaccountId,
+      //     access: true,
+      //   },
+      // },
     },
   });
+  // console.log("subaccountUsersWithAccess", subaccountUsersWithAccess);
   return subaccountUsersWithAccess;
 };
 
@@ -823,6 +830,218 @@ export const searchContacts = async (searchTerms: string) => {
   return response;
 };
 
-export const upsertTicket = async() =>{
+export const upsertTicket = async (
+  ticket: Prisma.TicketUncheckedCreateInput,
+  tags: Tag[]
+) => {
+  let order: number;
+  console.log("ticket", ticket);
 
+  if (!ticket.order) {
+    const tickets = await db.ticket.findMany({
+      where: {
+        laneId: ticket.laneId,
+      },
+    });
+    console.log("tickets", tickets);
+    order = tickets.length;
+  } else {
+    order = ticket.order;
+  }
+
+  const response = await db.ticket.upsert({
+    where: {
+      id: ticket.id,
+    },
+    update: {
+      ...ticket,
+      Tags: {
+        set: tags,
+      },
+    },
+    create: {
+      ...ticket,
+      Tags: {
+        connect: tags,
+      },
+      order,
+    },
+    include: {
+      Assigned: true,
+      Customer: true,
+      Tags: true,
+      Lane: true,
+    },
+  });
+  return response;
+};
+
+export const deleteTickets = async (ticketId: string) => {
+  const response = await db.ticket.delete({
+    where: {
+      id: ticketId,
+    },
+  });
+
+  return response;
+};
+
+export const upsertTag = async (
+  subaccountId: string,
+  tag: Prisma.TagUncheckedCreateInput
+) => {
+  const response = await db.tag.upsert({
+    where: {
+      id: tag.id || v4(),
+      subAccountId: subaccountId,
+    },
+    update: tag,
+    create: {
+      ...tag,
+      subAccountId: subaccountId,
+    },
+  });
+
+  return response;
+};
+
+export const deleteTag = async (tagId: string) => {
+  const response = await db.tag.delete({
+    where: { id: tagId },
+  });
+
+  return response;
+};
+
+export const getTagsForSubaccount = async (subacccountId: string) => {
+  const response = await db.subAccount.findUnique({
+    where: {
+      id: subacccountId,
+    },
+    select: {
+      Tags: true,
+    },
+  });
+  return response;
+};
+
+export const upsertContact = async (
+  contact: Prisma.ContactUncheckedCreateInput
+) => {
+  const response = await db.contact.upsert({
+    where: { id: contact.id || v4() },
+    update: contact,
+    create: contact,
+  });
+
+  return response;
+};
+
+export const getFunnels = async (subacccountId: string) => {
+  const funnels = await db.funnel.findMany({
+    where: {
+      subAccountId: subacccountId,
+    },
+    include: {
+      FunnelPages: true,
+    },
+  });
+
+  return funnels;
+};
+
+export const getFunnel = async (funnelId: string) => {
+  const funnel = await db.funnel.findUnique({
+    where: {
+      id: funnelId,
+    },
+    include: {
+      FunnelPages: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
+  });
+  return funnel;
+};
+
+export const upsertFunnelPage = async (
+  subaccountId: string,
+  funnelPage: UpsertFunnelPage,
+  funnelId: string
+) => {
+  if (!subaccountId || !funnelId) return;
+  const response = await db.funnelPage.upsert({
+    where: { id: funnelPage.id || "" },
+    update: { ...funnelPage },
+    create: {
+      ...funnelPage,
+      content: funnelPage.content
+        ? funnelPage.content
+        : JSON.stringify([
+            {
+              content: [],
+              id: "__body",
+              name: "Body",
+              styles: { backgroundColor: "white" },
+              type: "__body",
+            },
+          ]),
+      funnelId,
+    },
+  });
+
+  revalidatePath(`/subaccount/${subaccountId}/funnels/${funnelId}`, "page");
+  return response;
+};
+
+export const deleteFunnelePage = async (funnelPageId: string) => {
+  const response = await db.funnelPage.delete({ where: { id: funnelPageId } });
+
+  return response;
+};
+
+export const updateFunnelProducts = async (
+  products: string,
+  funnelId: string
+) => {
+  const data = await db.funnel.update({
+    where: { id: funnelId },
+    data: { liveProducts: products },
+  });
+  return data;
+};
+
+export const getFunnelPageDetails = async (funnelPageId: string) => {
+  const response = await db.funnelPage.findUnique({
+    where: {
+      id: funnelPageId,
+    },
+  })
+
+  return response
 }
+
+export const getDomainContent = async (subDomainName: string) => {
+  const response = await db.funnel.findUnique({
+    where: {
+      subDomainName,
+    },
+    include: { FunnelPages: true },
+  })
+  return response
+}
+
+export const getPipelines = async (subaccountId: string) => {
+  const response = await db.pipeline.findMany({
+    where: { subAccountId: subaccountId },
+    include: {
+      Lane: {
+        include: { Tickets: true },
+      },
+    },
+  })
+  return response
+}
+

@@ -1,7 +1,7 @@
 "use client";
 
-import { TicketDetails } from "@/lib/types";
-import { Agency, Contact, User } from "@prisma/client";
+import { PriceList, TicketDetails } from "@/lib/types";
+import { Agency, Contact, Plan, User } from "@prisma/client";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface ModalProviderProps {
@@ -11,7 +11,12 @@ interface ModalProviderProps {
 export type ModalData = {
   user?: User;
   agency?: Agency;
-  ticket?:TicketDetails[0]
+  ticket?: TicketDetails[0];
+  contact?: Contact;
+  plans?: {
+    defaultPriceId: Plan; 
+    plans: PriceList["data"];
+  };
 };
 
 type ModalContextType = {
@@ -73,7 +78,7 @@ export const useModal = () => {
     throw new Error("userModal must be used with in the modal provider ");
   }
 
-  return context
+  return context;
 };
 
-export default ModalProvider
+export default ModalProvider;

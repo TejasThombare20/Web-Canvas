@@ -1,3 +1,4 @@
+import Unauthorized from "@/components/Unauthorized";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -11,13 +12,11 @@ const page = async ({ params }: Props) => {
     where: { subAccountId: params.subaccountId },
   });
 
-
   if (pipelineExists) {
     return redirect(
       `/subaccount/${params.subaccountId}/pipelines/${pipelineExists.id}`
     );
   }
-
 
   try {
     const response = await db.pipeline.create({
@@ -30,7 +29,11 @@ const page = async ({ params }: Props) => {
     console.log("error", error);
   }
 
-  return <div>Hello</div>;
+  return (
+    <div>
+      <Unauthorized />
+    </div>
+  );
 };
 
 export default page;

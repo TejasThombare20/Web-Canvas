@@ -8,12 +8,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { pricingCards } from "@/lib/constants";
+import { stripe } from "@/lib/stripe";
 import clsx from "clsx";
 import { Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const prices = await stripe.prices.list({
+    product: process.env.NEXT_PLURA_PRODUCT_ID,
+    active: true,
+  });
   return (
     <>
       <main className="h-full">
@@ -82,7 +87,7 @@ export default function Home() {
                     ))}
                   </div>
                   <Link
-                    href={`/login?plan=${card.priceId}`}
+                    href={`/`}
                     className={clsx(
                       "w-full text-center bg-primary p-2 rounded-md",
                       {

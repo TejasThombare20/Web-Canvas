@@ -1,8 +1,11 @@
+
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import AgencyDetails from "@/components/AgencyDetails";
 import { getAuthUserDetails, verifyAndAcceptInvitation } from "@/lib/querires";
 import { Plan } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { getServerSession } from "next-auth";
+
 
 import { redirect } from "next/navigation";
 import React from "react";
@@ -13,14 +16,27 @@ const page = async ({
   searchParams: { plan: Plan; state: string; code: string };
 }) => {
   const session = await getServerSession(authOptions);
+  
   const authUser = session?.user;
-  console.log("session", session);
+  // console.log("session", session);
 
   const agencyId = await verifyAndAcceptInvitation();
+   
+  // await update({
+  //   ...session,
+  //   user: {
+  //     ...session?.user,
+  //     role: "SUBACCOUNT_USER",
+  //   },
+  // });
+  
 
-  console.log("agencyId", agencyId);
+
+
+  // console.log("agencyId", agencyId);
 
   const user = await getAuthUserDetails();
+  // console.log("userData in AgencyPage", user)
 
 
   if (agencyId) {

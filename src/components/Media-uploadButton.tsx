@@ -20,12 +20,12 @@ const MediaUploadButton = ({ subacocoutId }: Props) => {
             title="Upload Media"
             subheading="Upload a file to your media bucket"
           >
-            <UploadMediaForm subaccountId={subacocoutId}/>
+            <UploadMediaForm subaccountId={subacocoutId} />
           </CustomModal>
         );
       }}
     >
-      Upload media
+      Upload
     </Button>
   );
 };

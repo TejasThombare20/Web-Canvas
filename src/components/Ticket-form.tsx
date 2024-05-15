@@ -19,7 +19,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-import TagCreator from "../global/tag-creator";
+// import TagCreator from "../global/tag-creator";
 import { useModal } from "@/provider/modal-provider";
 import { toast } from "./ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -50,7 +50,9 @@ import {
   getSubAccountTeamMembers,
   saveActivityLogsNotification,
   searchContacts,
+  upsertTicket,
 } from "@/lib/querires";
+import TagCreator from "./Tag-creator";
 
 type Props = {
   laneId: string;
@@ -85,6 +87,7 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
     if (subaccountId) {
       const fetchData = async () => {
         const response = await getSubAccountTeamMembers(subaccountId);
+        console.log("response", response);
         if (response) setAllTeamMembers(response);
       };
       fetchData();
@@ -113,7 +116,11 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
   }, [defaultData]);
 
   const onSubmit = async (values: z.infer<typeof TicketFormSchema>) => {
+    console.log(laneId);
+    console.log("contact", contact);
     if (!laneId) return;
+    console.log("id", defaultData.ticket?.id);
+    console.log("defaultData", defaultData);
     try {
       const response = await upsertTicket(
         {
@@ -173,6 +180,7 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
                 </FormItem>
               )}
             />
+
             <FormField
               disabled={isLoading}
               control={form.control}

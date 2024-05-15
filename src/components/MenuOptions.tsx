@@ -1,114 +1,125 @@
-"use client";
+'use client'
+
 import {
   Agency,
   AgencySidebarOption,
   SubAccount,
   SubAccountSidebarOption,
-} from "@prisma/client";
-import { useEffect, useMemo, useState } from "react";
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet";
-import { Button } from "./ui/button";
-import clsx from "clsx";
-import { AspectRatio } from "./ui/aspect-ratio";
-import Image from "next/image";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+} from '@prisma/client'
+import React, { useEffect, useMemo, useState } from 'react'
 
-import { ChevronsUpDown, Compass, Menu, PlusCircleIcon } from "lucide-react";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "./ui/command";
-import Link from "next/link";
-import { icons } from "@/lib/constants";
-import { useModal } from "@/provider/modal-provider";
-import CustomModal from "./Custom-modal";
-import SubAccountDetails from "./SubAccount-deatils";
-import { Separator } from "./ui/separator";
+
+import { ChevronsUpDown, Compass, Menu, PlusCircleIcon } from 'lucide-react'
+import clsx from 'clsx'
+
+import Image from 'next/image'
+
+
+import Link from 'next/link'
+import { twMerge } from 'tailwind-merge'
+
+
+import { icons } from '@/lib/constants'
+import { useModal } from '@/provider/modal-provider'
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from './ui/sheet'
+import { Button } from './ui/button'
+import { AspectRatio } from './ui/aspect-ratio'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command'
+import CustomModal from './Custom-modal'
+import SubAccountDetails from './SubAccount-deatils'
+import { Separator } from './ui/separator'
 
 type Props = {
-  defaultOpen?: boolean;
-  subAccounts: SubAccount[];
-  sidebarOpt: AgencySidebarOption[] | SubAccountSidebarOption[];
-  sidebarlogo: string;
-  details: any;
-  user: any;
-  id: string;
-};
+  defaultOpen?: boolean
+  subAccounts: SubAccount[]
+  sidebarOpt: AgencySidebarOption[] | SubAccountSidebarOption[]
+  sidebarLogo: string
+  details: any
+  user: any
+  id: string
+}
+
 const MenuOptions = ({
-  defaultOpen,
   details,
   id,
+  sidebarLogo,
   sidebarOpt,
-  sidebarlogo,
   subAccounts,
   user,
+  defaultOpen,
 }: Props) => {
-  const { setOpen } = useModal();
-  const [isMounted, setisMounted] = useState(false);
+  const { setOpen } = useModal()
+  const [isMounted, setIsMounted] = useState(false)
 
   const openState = useMemo(
     () => (defaultOpen ? { open: true } : {}),
     [defaultOpen]
-  );
+  )
 
   useEffect(() => {
-    setisMounted(true);
-  }, []);
+    setIsMounted(true)
+  }, [])
 
-  if (!isMounted) return;
+  if (!isMounted) return
 
   return (
-    <Sheet modal={false} {...openState}>
+    <Sheet
+      modal={false}
+      {...openState}
+    >
       <SheetTrigger
         asChild
-        className="absolute left-4 top-4 z-[100] : md:!hidden flex"
+        className="absolute left-4 top-4 z-[100] md:!hidden felx"
       >
-        <Button variant="outline" size="icon">
+        <Button
+          variant="outline"
+          size={'icon'}
+        >
           <Menu />
         </Button>
       </SheetTrigger>
+
       <SheetContent
         showX={!defaultOpen}
-        side={"left"}
+        side={'left'}
         className={clsx(
-          "bg-background/80 backdrop-blur-xl fixed top-0 border-r-[1px] p-6 ",
+          'bg-background/80 backdrop-blur-xl fixed top-0 border-r-[1px] p-6 ',
           {
-            "hidden md:inline-block z-[100] w-[300px]": defaultOpen,
-            "inline-block md:hidden z-[100] w-[300px]": !defaultOpen,
+            'hidden md:inline-block z-0 w-[300px] mt-12': defaultOpen,
+            'inline-block md:hidden z-[100] w-full  ': !defaultOpen,
           }
         )}
       >
         <div>
           <AspectRatio ratio={16 / 5}>
             <Image
-              src={sidebarlogo}
-              alt=" Sidebar logo"
+              src={sidebarLogo}
+              alt="Sidebar Logo"
               fill
               className="rounded-md object-contain"
-            ></Image>
+            />
           </AspectRatio>
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                className="w-full my-4 flex items-center justify-between gap-10 py-8"
-                variant={"ghost"}
+                className="w-full my-4 flex items-center justify-between py-8"
+                variant="ghost"
               >
-                <div className="flex items-center text-left gap-2 ">
-                  <Compass size={30} />
+                <div className="flex items-center text-left gap-2">
+                  <Compass />
                   <div className="flex flex-col">
                     {details.name}
-                    <span className="text-muted-foreground text-sm text-wrap line-clamp-2">
+                    <span className="text-muted-foreground">
                       {details.address}
                     </span>
                   </div>
                 </div>
                 <div>
-                  <ChevronsUpDown size={16} className="text-muted-foreground" />
+                  <ChevronsUpDown
+                    size={16}
+                    className="text-muted-foreground"
+                  />
                 </div>
               </Button>
             </PopoverTrigger>
@@ -117,8 +128,8 @@ const MenuOptions = ({
                 <CommandInput placeholder="Search Accounts..." />
                 <CommandList className="pb-16">
                   <CommandEmpty> No results found</CommandEmpty>
-                  {(user?.role === "AGENCY_OWNER" ||
-                    user?.role === "AGENCY_ADMIN") &&
+                  {(user?.role === 'AGENCY_OWNER' ||
+                    user?.role === 'AGENCY_ADMIN') &&
                     user?.Agency && (
                       <CommandGroup heading="Agency">
                         <CommandItem className="!bg-transparent my-2 text-primary broder-[1px] border-border p-2 rounded-md hover:!bg-muted cursor-pointer transition-all">
@@ -217,11 +228,11 @@ const MenuOptions = ({
                             )}
                           </CommandItem>
                         ))
-                      : "No Accounts"}
+                      : 'No Accounts'}
                   </CommandGroup>
                 </CommandList>
-                {(user?.role === "AGENCY_OWNER" ||
-                  user?.role === "AGENCY_ADMIN") && (
+                {(user?.role === 'AGENCY_OWNER' ||
+                  user?.role === 'AGENCY_ADMIN') && (
                   <SheetClose>
                     <Button
                       className="w-full flex gap-2"
@@ -230,7 +241,6 @@ const MenuOptions = ({
                           <CustomModal
                             title="Create A Subaccount"
                             subheading="You can switch between your agency account and the subaccount from the sidebar"
-                            defaultOpen={true}
                           >
                             <SubAccountDetails
                               agencyDetails={user?.Agency as Agency}
@@ -238,7 +248,7 @@ const MenuOptions = ({
                               userName={user?.name}
                             />
                           </CustomModal>
-                        );
+                        )
                       }}
                     >
                       <PlusCircleIcon size={15} />
@@ -257,28 +267,28 @@ const MenuOptions = ({
               <CommandList className="py-4 overflow-visible">
                 <CommandEmpty>No Results Found</CommandEmpty>
                 <CommandGroup className="overflow-visible">
-                  {sidebarOpt.map((sidebarOption) => {
-                    let val;
+                  {sidebarOpt.map((sidebarOptions) => {
+                    let val
                     const result = icons.find(
-                      (icon: any) => icon.value === sidebarOption.icon
-                    );
+                      (icon) => icon.value === sidebarOptions.icon
+                    )
                     if (result) {
-                      val = <result.path />;
+                      val = <result.path />
                     }
                     return (
-                      <Link
-                        href={sidebarOption.link}
-                        className="flex items-center gap-2  hover:bg-transparent rounded-md transition-all md:w-full w-[300px]"
+                      <CommandItem
+                        key={sidebarOptions.id}
+                        className="md:w-[275px] w-full"
                       >
-                        <CommandItem
-                          key={sidebarOption.id}
-                          className="md:w-[300px] w-full"
+                        <Link
+                          href={sidebarOptions.link}
+                          className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px]"
                         >
                           {val}
-                          <span>{sidebarOption.name}</span>
-                        </CommandItem>
-                      </Link>
-                    );
+                          <span>{sidebarOptions.name}</span>
+                        </Link>
+                      </CommandItem>
+                    )
                   })}
                 </CommandGroup>
               </CommandList>
@@ -287,7 +297,7 @@ const MenuOptions = ({
         </div>
       </SheetContent>
     </Sheet>
-  );
-};
+  )
+}
 
-export default MenuOptions;
+export default MenuOptions

@@ -110,6 +110,8 @@ const UserDetails = ({ id, subAccounts, userData ,type }: Props) => {
   });
 
   useEffect(() => {
+
+    console.log("data agency",data.agency)
     if (!data.agency) return;
 
     const getPermissions = async () => {
@@ -232,7 +234,7 @@ const UserDetails = ({ id, subAccounts, userData ,type }: Props) => {
     <Card>
       <CardHeader>
         <CardTitle>User Details</CardTitle>
-        <CardDescription>Add or update your ingormation</CardDescription>
+        <CardDescription>Add or update your information</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>

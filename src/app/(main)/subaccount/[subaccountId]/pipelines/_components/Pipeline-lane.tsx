@@ -33,18 +33,20 @@ import { useModal } from '@/provider/modal-provider'
 import CustomModal from '@/components/Custom-modal'
 import LaneForm from '@/components/lane-form'
 import { deletelane, saveActivityLogsNotification } from '@/lib/querires'
+import TicketForm from '@/components/Ticket-form'
+import PipelineTicket from './Pipeline-ticket'
 // import PipelineTicket from './pipeline-ticket'
 
 
 interface PipelaneLaneProps {
-  setAllTickets: Dispatch<SetStateAction<TicketWithTags>>
-  allTickets: TicketWithTags
-  tickets: TicketWithTags
-  pipelineId: string
-  laneDetails: LaneDetails
-  subaccountId: string
-  index: number
-}
+    setAllTickets: Dispatch<SetStateAction<TicketWithTags>>
+    allTickets: TicketWithTags
+    tickets: TicketWithTags
+    pipelineId: string
+    laneDetails: LaneDetails
+    subaccountId: string
+    index: number
+  }
 
 const PipelineLane: React.FC<PipelaneLaneProps> = ({
   setAllTickets,

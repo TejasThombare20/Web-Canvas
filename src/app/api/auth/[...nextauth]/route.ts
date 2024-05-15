@@ -40,10 +40,11 @@ const authOptions: NextAuthOptions = {
 
       if (!token.role && token.email) {
         const data = await getUserRole(token.email);
+        console.log(" role data" ,data )
         token.role = data?.role;
         token.id = data?.id;
 
-        console.log("token bhai", token);
+        console.log("token while setting Role", token);
       }
 
       if (trigger === "update") {
