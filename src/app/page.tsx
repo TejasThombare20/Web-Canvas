@@ -8,12 +8,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { pricingCards } from "@/lib/constants";
+import { constructMetaData } from "@/lib/utils";
 import clsx from "clsx";
 import { Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+export const metadata = constructMetaData()
+
 export default function Home() {
+ 
   return (
     // <>
     //   <main className="h-full">
