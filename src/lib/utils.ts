@@ -15,8 +15,8 @@ export function getStripeOAuthLink(
 
 export function constructMetaData({
   title = "Web-Canvas",
-  description = "Free & open source Web site builder",
-  image = "/thumbnail.png",
+  description = "Web-Canvas is a SaaS platform that allows users to create professional static websites effortlessly with customizable pre-built components.",
+  image = "/assets/images.png",
   icons = "/favicon.ico",
   noIndex = false,
 }: {
@@ -42,7 +42,7 @@ export function constructMetaData({
       creator: "@TejasTh371168321",
     },
     icons,
-    metadataBase: new URL("https://text-twin-api.vercel.app"),
+    metadataBase: new URL("https://webcanvasproduction.vercel.app/"),
     themeColor: "#FFF",
     ...(noIndex && {
       robots: {
