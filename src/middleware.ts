@@ -5,8 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./app/api/auth/[...nextauth]/route";
 import { getToken } from "next-auth/jwt";
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
+
 
 export default withAuth(
   // `withAuth` augments your `Request` with the user's token.

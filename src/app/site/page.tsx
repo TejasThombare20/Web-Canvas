@@ -9,10 +9,13 @@ import {
 } from "@/components/ui/card";
 import { pricingCards } from "@/lib/constants";
 import { stripe } from "@/lib/stripe";
+import { constructMetaData } from "@/lib/utils";
 import clsx from "clsx";
 import { Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata = constructMetaData()
 
 export default async function Home() {
   const prices = await stripe.prices.list({

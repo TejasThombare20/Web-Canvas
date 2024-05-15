@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Provider from "@/components/Provider";
@@ -10,9 +9,7 @@ import { constructMetaData } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
-
-
-export const metadata = constructMetaData()
+export const metadata = constructMetaData();
 
 export default function RootLayout({
   children,
