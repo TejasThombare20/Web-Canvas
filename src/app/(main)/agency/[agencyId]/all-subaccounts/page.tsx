@@ -46,7 +46,7 @@ const Page = async ({ params }: Props) => {
           id={params.agencyId}
           className="w-[200px] self-end m-6"
         />
-        <Command className="rounded-lg bg-transparent ">
+        <Command className="rounded-lg bg-transparent  ">
           <CommandInput placeholder="Search Account..." />
           <CommandList>
             <CommandEmpty>No Results Found.</CommandEmpty>

@@ -51,6 +51,8 @@ const FunnelEditor = ({ funnelPageId, liveMode }: Props) => {
     dispatch({ type: "TOGGLE_PREVIEW_MODE" });
     dispatch({ type: "TOGGLE_LIVE_MODE" });
   };
+
+  console.log({ structure: state.editor.elements });
   return (
     <div
       className={clsx(

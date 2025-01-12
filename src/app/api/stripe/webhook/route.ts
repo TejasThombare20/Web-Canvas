@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
     process.env.NODE_ENV === "production"
       ? process.env.NEXT_PUBLIC_STRIPE_PRODUCTION_WEBHOOK_SECRET
       : process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET;
+  // const webhookSecret = process.env.NEXT_PUBLIC_STRIPE_WEBHOOK_SECRET;
 
   try {
     if (!sig || !webhookSecret) {
